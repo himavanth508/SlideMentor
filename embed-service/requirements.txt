@@ -1,0 +1,7 @@
+transformers
+sentence-transformers
+python-dotenv
+CodeCarbon
+fastapi
+uvicorn
+pydantic
