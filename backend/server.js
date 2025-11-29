@@ -1,4 +1,5 @@
 const express = require("express");
+const path = require('path');
 const cors = require("cors");
 const dotenv = require("dotenv");
 
@@ -17,6 +18,13 @@ app.use(express.json());
 app.use("/upload", uploadRoute);
 app.use("/files", filesRoute);
 app.use("/query", queryRoute);
+
+app.use(express.static(path.join(__dirname, '../frontend/dist')));
+
+app.use((req, res, next) => {
+  res.sendFile(path.join(__dirname, '../frontend/dist', 'index.html'));
+});
+
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

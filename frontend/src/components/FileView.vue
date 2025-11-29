@@ -4,12 +4,17 @@
     <div class="flex-1 p-6 overflow-hidden">
       <div class="flex justify-between items-center mb-4">
         <h2 class="text-xl font-bold">Viewing: {{ filename }}</h2>
-        <button 
+        <button
           @click="isChatOpen = !isChatOpen"
           class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
         >
-          {{ isChatOpen ? 'Close Chat' : 'Open Chat' }}
+          <span v-if="isChatOpen">Close</span>
+          <span v-else>
+            <span class="text-xl leading-none">⚡</span>
+            <span class="font-medium">AI</span>
+          </span>
         </button>
+
       </div>
       <iframe
         v-if="pdfUrl"
@@ -20,14 +25,20 @@
     </div>
 
     <!-- Chat Interface -->
-    <div 
-      v-show="isChatOpen"
-      class="w-96 h-full border-l bg-white shadow-lg absolute right-0 top-0 flex flex-col transition-transform duration-300"
-      :class="{ 'translate-x-0': isChatOpen, 'translate-x-full': !isChatOpen }"
+    <div
+      v-if="isChatOpen"
+      class="w-96 h-full border-l bg-white shadow-lg flex-shrink-0 flex flex-col transition-all duration-300"
     >
       <!-- Chat Header -->
-      <div class="p-4 border-b bg-gray-50">
-        <h3 class="text-lg font-semibold">Ask about this PDF</h3>
+      <div class="p-4 border-b bg-gray-50 flex items-center justify-between">
+          <h3 class="text-lg font-semibold">Ask about this PDF</h3>
+          <button
+            @click="isChatOpen = false"
+            class="text-gray-500 hover:text-gray-700 rounded-md p-1"
+            aria-label="Close chat"
+          >
+            &times;
+          </button>
       </div>
 
       <!-- Chat Messages -->
@@ -73,6 +84,16 @@
         </form>
       </div>
     </div>
+    <!-- Floating open-chat button (visible when chat is closed) -->
+    <button
+      v-if="!isChatOpen"
+      @click="isChatOpen = true"
+      class="fixed bottom-6 right-6 bg-blue-600 text-white p-3 rounded-full shadow-lg hover:bg-blue-700 focus:outline-none z-50"
+      aria-label="Open chat"
+      >
+        <span class="text-xl leading-none">⚡</span>
+        <span class="font-medium">AI</span>
+    </button>
   </div>
 </template>
 
@@ -85,7 +106,7 @@ export default {
     return {
       pdfUrl: null,
       filename: "",
-      isChatOpen: true,
+      isChatOpen: false,
       userInput: "",
       messages: [],
       isLoading: false
